@@ -6,7 +6,7 @@ const reviews = [
 ];
 
 const Testimonials = () => (
-  <section className="py-24 md:py-36">
+  <section id="reviews" className="py-24 md:py-36">
     <div className="container">
       <div className="mb-14 md:mb-20">
         <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[0.95]">

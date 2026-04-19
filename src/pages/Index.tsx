@@ -2,11 +2,10 @@ import Navbar from "@/components/aurea/Navbar";
 import Hero from "@/components/aurea/Hero";
 import TrustStrip from "@/components/aurea/TrustStrip";
 import OurClinic from "@/components/aurea/OurClinic";
-import BeforeAfter from "@/components/aurea/BeforeAfter";
 import Services from "@/components/aurea/Services";
 import WhyUs from "@/components/aurea/WhyUs";
+import BeforeAfter from "@/components/aurea/BeforeAfter";
 import Testimonials from "@/components/aurea/Testimonials";
-import Experience from "@/components/aurea/Experience";
 import Booking from "@/components/aurea/Booking";
 import Footer from "@/components/aurea/Footer";
 import StickyWhatsApp from "@/components/aurea/StickyWhatsApp";
@@ -38,14 +37,12 @@ const Index = () => {
       <Hero />
       <TrustStrip />
       <OurClinic />
+      <Services />
+      <BookNowCTA />
+      <WhyUs />
       <BeforeAfter />
       <BookNowCTA />
-      <Services />
-      <WhyUs />
-      <BookNowCTA />
       <Testimonials />
-      <Experience />
-      <BookNowCTA />
       <Booking />
       <Footer />
       <StickyWhatsApp />
