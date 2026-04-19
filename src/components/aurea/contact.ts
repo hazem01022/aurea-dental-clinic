@@ -10,5 +10,5 @@ export const ADDRESS =
 export const MAPS_LINK =
   "https://www.google.com/maps/place/Aurea+Dental+Clinic+%7C+Dr+Mohamed+Heiba/@30.0014984,31.5301139,17z/";
 export const MAPS_EMBED =
-  "https://www.google.com/maps?q=Aurea+Dental+Clinic+Eterna+Healthcare+City+New+Cairo&output=embed";
+  "https://www.google.com/maps?q=Aurea+Dental+Clinic+Dr+Mohamed+Heiba&ll=30.0014938,31.5326888&z=17&output=embed";
 export const HOURS = "Sat – Thu · 11:00 – 21:00";
