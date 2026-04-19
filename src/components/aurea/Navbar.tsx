@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import Logo from "./Logo";
 
 const links = [
+  { href: "#clinic", label: "Our Clinic" },
   { href: "#services", label: "Services" },
-  { href: "#why", label: "Why Aurea" },
-  { href: "#doctors", label: "Doctors" },
-  { href: "#contact", label: "Contact" },
+  { href: "#why", label: "Why Choose Us" },
+  { href: "#before-after", label: "Before & After" },
+  { href: "#reviews", label: "Reviews" },
+  { href: "#contact", label: "Book" },
+  { href: "#location", label: "Location" },
 ];
 
 const Navbar = () => {
@@ -45,7 +48,7 @@ const Navbar = () => {
           href="#contact"
           className="hidden md:inline-flex items-center px-6 py-2.5 text-xs tracking-luxe uppercase border border-foreground/80 text-foreground hover:bg-foreground hover:text-background transition-all duration-500"
         >
-          Book Now
+          Book Appointment
         </a>
 
         <button
@@ -79,7 +82,7 @@ const Navbar = () => {
                 onClick={() => setOpen(false)}
                 className="block w-full text-center mt-2 px-6 py-3 text-xs tracking-luxe uppercase bg-foreground text-background"
               >
-                Book Now
+                Book Appointment
               </a>
             </li>
           </ul>
