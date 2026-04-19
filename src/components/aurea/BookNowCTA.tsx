@@ -1,6 +1,6 @@
 import { PHONE } from "./contact";
 
-const BookNowCTA = ({ label = "Book Now" }: { label?: string }) => (
+const BookNowCTA = ({ label = "Book Your Appointment Now" }: { label?: string }) => (
   <section className="py-14 md:py-20 bg-background">
     <div className="container flex justify-center">
       <a
