@@ -1,4 +1,4 @@
-import clinic from "@/assets/clinic-interior.jpg";
+import calmImage from "@/assets/aurea-calm.jpg";
 
 const points = [
   "Highly professional and experienced dentists",
@@ -13,26 +13,25 @@ const WhyUs = () => (
     <div className="container grid md:grid-cols-2 gap-16 items-center">
       <div className="order-2 md:order-1">
         <img
-          src={clinic}
-          alt="Aurea dental clinic interior with warm minimal design"
+          src={calmImage}
+          alt="Designed to feel calm from the moment you walk in"
           loading="lazy"
-          width={1600}
-          height={1100}
-          className="w-full aspect-[4/3] object-cover shadow-elegant"
+          className="w-full aspect-square object-cover shadow-elegant"
         />
       </div>
 
       <div className="order-1 md:order-2">
-        <p className="text-xs tracking-luxe uppercase text-gold mb-4">Why Aurea</p>
-        <h2 className="font-serif text-4xl md:text-5xl leading-tight mb-8">
-          Why patients trust <span className="italic text-gold">Aurea Dental Clinic.</span>
+        <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[0.95] mb-10">
+          Why Choose <span className="italic text-gold">Us</span>
         </h2>
 
         <ul className="space-y-5">
           {points.map((p) => (
             <li key={p} className="flex gap-4 items-start">
-              <span className="mt-2 w-6 h-px bg-gold flex-shrink-0" />
-              <span className="text-base md:text-lg text-foreground/85 leading-relaxed">{p}</span>
+              <span className="mt-3 w-2 h-2 rounded-full bg-gold flex-shrink-0" />
+              <span className="text-lg md:text-2xl font-serif text-foreground/90 leading-snug">
+                {p}
+              </span>
             </li>
           ))}
         </ul>

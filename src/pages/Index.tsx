@@ -1,6 +1,7 @@
 import Navbar from "@/components/aurea/Navbar";
 import Hero from "@/components/aurea/Hero";
 import TrustStrip from "@/components/aurea/TrustStrip";
+import OurClinic from "@/components/aurea/OurClinic";
 import Services from "@/components/aurea/Services";
 import WhyUs from "@/components/aurea/WhyUs";
 import Testimonials from "@/components/aurea/Testimonials";
@@ -28,6 +29,7 @@ const Index = () => {
       <Navbar />
       <Hero />
       <TrustStrip />
+      <OurClinic />
       <Services />
       <WhyUs />
       <Testimonials />

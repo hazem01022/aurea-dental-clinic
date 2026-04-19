@@ -2,9 +2,8 @@ const Doctors = () => (
   <section id="doctors" className="py-24 md:py-36 bg-foreground text-background">
     <div className="container grid md:grid-cols-12 gap-12 items-center">
       <div className="md:col-span-5">
-        <p className="text-xs tracking-luxe uppercase text-gold mb-4">Our Team</p>
-        <h2 className="font-serif text-4xl md:text-6xl leading-tight">
-          Meet our <br /> <span className="italic text-gold">experts.</span>
+        <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[0.95]">
+          Our <span className="italic text-gold">Doctors</span>
         </h2>
       </div>
       <div className="md:col-span-7 md:border-l md:border-background/15 md:pl-12">
