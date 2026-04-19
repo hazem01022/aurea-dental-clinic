@@ -1,4 +1,4 @@
-import heroImage from "@/assets/hero-smile.jpg";
+import heroImage from "@/assets/aurea-smile.jpg";
 import { PHONE, WHATSAPP_LINK } from "./contact";
 
 const Hero = () => {
@@ -35,7 +35,7 @@ const Hero = () => {
               rel="noopener noreferrer"
               className="inline-flex items-center px-8 py-4 text-xs tracking-luxe uppercase border border-foreground/30 text-foreground hover:border-gold hover:text-gold transition-all duration-500"
             >
-              WhatsApp · {PHONE}
+              WhatsApp Us
             </a>
           </div>
 
