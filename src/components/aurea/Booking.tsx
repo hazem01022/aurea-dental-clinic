@@ -45,9 +45,8 @@ const Booking = () => {
     <section id="contact" className="py-24 md:py-36 bg-cream-deep">
       <div className="container grid md:grid-cols-2 gap-16">
         <div>
-          <p className="text-xs tracking-luxe uppercase text-gold mb-4">Book An Appointment</p>
-          <h2 className="font-serif text-4xl md:text-6xl leading-tight mb-8">
-            Begin your <span className="italic text-gold">smile</span> today.
+          <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[0.95] mb-8">
+            Book <span className="italic text-gold">Appointment</span>
           </h2>
           <p className="text-muted-foreground text-lg leading-relaxed mb-10 max-w-md">
             Reach out by phone, WhatsApp, or fill in the form — we usually reply within minutes.

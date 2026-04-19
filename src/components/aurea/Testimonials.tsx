@@ -8,10 +8,9 @@ const reviews = [
 const Testimonials = () => (
   <section className="py-24 md:py-36">
     <div className="container">
-      <div className="max-w-2xl mb-16">
-        <p className="text-xs tracking-luxe uppercase text-gold mb-4">Patient Stories</p>
-        <h2 className="font-serif text-4xl md:text-5xl leading-tight">
-          Words from those who <span className="italic text-gold">smile with us.</span>
+      <div className="mb-14 md:mb-20">
+        <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[0.95]">
+          Patient <span className="italic text-gold">Reviews</span>
         </h2>
       </div>
 
