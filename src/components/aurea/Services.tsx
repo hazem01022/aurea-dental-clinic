@@ -1,39 +1,58 @@
-const services = [
-  { title: "Glow", items: ["Cleaning", "Polishing", "Whitening"] },
-  { title: "Perfect", items: ["Veneers", "Smile Design", "Contouring"] },
-  { title: "Protect", items: ["Checkups", "X-rays", "Gum Care"] },
-  { title: "Restore", items: ["Fillings", "Crowns", "Implants"] },
-  { title: "Align", items: ["Braces", "Clear Aligners", "Retainers"] },
-  { title: "Gentle", items: ["Kids Dentistry", "Emergency Care"] },
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+
+type Service = { id: string; title: string; items: string[] };
+
+const fallback: Service[] = [
+  { id: "1", title: "Glow", items: ["Cleaning", "Polishing", "Whitening"] },
+  { id: "2", title: "Perfect", items: ["Veneers", "Smile Design", "Contouring"] },
+  { id: "3", title: "Protect", items: ["Checkups", "X-rays", "Gum Care"] },
+  { id: "4", title: "Restore", items: ["Fillings", "Crowns", "Implants"] },
+  { id: "5", title: "Align", items: ["Braces", "Clear Aligners", "Retainers"] },
+  { id: "6", title: "Gentle", items: ["Kids Dentistry", "Emergency Care"] },
 ];
 
-const Services = () => (
-  <section id="services" className="py-24 md:py-36">
-    <div className="container">
-      <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[0.95] mb-14 md:mb-20">
-        Our <span className="italic text-gold">Services</span>
-      </h2>
+const Services = () => {
+  const [services, setServices] = useState<Service[]>(fallback);
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-border">
-        {services.map((s) => (
-          <article
-            key={s.title}
-            className="group bg-background p-10 md:p-12 hover:bg-cream-deep transition-colors duration-500"
-          >
-            <h3 className="font-serif text-4xl md:text-5xl mb-8">{s.title}</h3>
-            <ul className="space-y-3">
-              {s.items.map((item) => (
-                <li key={item} className="flex items-center gap-3 text-lg md:text-xl text-foreground/85">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </article>
-        ))}
+  useEffect(() => {
+    supabase
+      .from("services")
+      .select("id,title,items")
+      .order("sort_order", { ascending: true })
+      .then(({ data }) => {
+        if (data && data.length > 0) setServices(data as Service[]);
+      });
+  }, []);
+
+  return (
+    <section id="services" className="py-24 md:py-36">
+      <div className="container">
+        <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[0.95] mb-14 md:mb-20">
+          Our <span className="italic text-gold">Services</span>
+        </h2>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-border">
+          {services.map((s) => (
+            <article
+              key={s.id}
+              className="group bg-background p-10 md:p-12 hover:bg-cream-deep transition-colors duration-500"
+            >
+              <h3 className="font-serif text-4xl md:text-5xl mb-8">{s.title}</h3>
+              <ul className="space-y-3">
+                {s.items.map((item) => (
+                  <li key={item} className="flex items-center gap-3 text-lg md:text-xl text-foreground/85">
+                    <span className="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 export default Services;

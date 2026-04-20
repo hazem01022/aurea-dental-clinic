@@ -1,39 +1,63 @@
+import { useEffect, useState } from "react";
 import img1 from "@/assets/before-after-1.jpg";
 import img2 from "@/assets/before-after-2.jpg";
 import img3 from "@/assets/before-after-3.jpg";
 import img4 from "@/assets/before-after-4.jpg";
+import { supabase } from "@/integrations/supabase/client";
 
-const cases = [
-  { src: img1, alt: "Smile makeover with veneers — before and after" },
-  { src: img2, alt: "Natural smile transformation — before and after" },
-  { src: img3, alt: "Veneers and cosmetic dentistry — before and after" },
-  { src: img4, alt: "Smile design result — before and after" },
+type Item = { id: string; src: string; alt: string };
+
+const fallback: Item[] = [
+  { id: "1", src: img1, alt: "Smile makeover with veneers — before and after" },
+  { id: "2", src: img2, alt: "Natural smile transformation — before and after" },
+  { id: "3", src: img3, alt: "Veneers and cosmetic dentistry — before and after" },
+  { id: "4", src: img4, alt: "Smile design result — before and after" },
 ];
 
-const BeforeAfter = () => (
-  <section id="before-after" className="py-24 md:py-36">
-    <div className="container">
-      <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[0.95] mb-14 md:mb-20">
-        Before <span className="italic text-gold">&</span> After
-      </h2>
+const BeforeAfter = () => {
+  const [cases, setCases] = useState<Item[]>(fallback);
 
-      <div className="grid sm:grid-cols-2 gap-6 md:gap-10">
-        {cases.map((c) => (
-          <figure
-            key={c.src}
-            className="relative overflow-hidden bg-foreground/5 shadow-elegant group"
-          >
-            <img
-              src={c.src}
-              alt={c.alt}
-              loading="lazy"
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-            />
-          </figure>
-        ))}
+  useEffect(() => {
+    supabase
+      .from("before_after")
+      .select("id,image_url,alt")
+      .order("sort_order", { ascending: true })
+      .then(({ data }) => {
+        if (data && data.length > 0) {
+          setCases(
+            data
+              .filter((d) => d.image_url)
+              .map((d) => ({ id: d.id, src: d.image_url, alt: d.alt || "Before and after" }))
+          );
+        }
+      });
+  }, []);
+
+  return (
+    <section id="before-after" className="py-24 md:py-36">
+      <div className="container">
+        <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[0.95] mb-14 md:mb-20">
+          Before <span className="italic text-gold">&</span> After
+        </h2>
+
+        <div className="grid sm:grid-cols-2 gap-6 md:gap-10">
+          {cases.map((c) => (
+            <figure
+              key={c.id}
+              className="relative overflow-hidden bg-foreground/5 shadow-elegant group"
+            >
+              <img
+                src={c.src}
+                alt={c.alt}
+                loading="lazy"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+              />
+            </figure>
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 export default BeforeAfter;
