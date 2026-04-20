@@ -21,7 +21,39 @@ const OurClinic = () => {
     );
 
     observer.observe(video);
-    return () => observer.disconnect();
+
+    const tryUnmute = () => {
+      const v = videoRef.current;
+      if (!v) return;
+      v.muted = false;
+      v.volume = 1;
+      setMuted(false);
+      v.play().catch(() => {
+        v.muted = true;
+        setMuted(true);
+      });
+    };
+
+    const onInteract = () => {
+      tryUnmute();
+      window.removeEventListener("scroll", onInteract);
+      window.removeEventListener("click", onInteract);
+      window.removeEventListener("touchstart", onInteract);
+      window.removeEventListener("keydown", onInteract);
+    };
+
+    window.addEventListener("scroll", onInteract, { passive: true, once: true });
+    window.addEventListener("click", onInteract, { once: true });
+    window.addEventListener("touchstart", onInteract, { passive: true, once: true });
+    window.addEventListener("keydown", onInteract, { once: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", onInteract);
+      window.removeEventListener("click", onInteract);
+      window.removeEventListener("touchstart", onInteract);
+      window.removeEventListener("keydown", onInteract);
+    };
   }, []);
 
   const toggleMute = () => {
