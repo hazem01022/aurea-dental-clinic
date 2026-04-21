@@ -36,9 +36,10 @@ const BeforeAfterAdmin = () => {
     else toast.success("Photo saved");
   };
   const add = async () => {
+    const maxOrder = rows.reduce((m, r) => Math.max(m, r.sort_order), -1);
     const { error } = await supabase
       .from("before_after")
-      .insert({ image_url: "", alt: "", sort_order: rows.length });
+      .insert({ image_url: "", alt: "", sort_order: maxOrder + 1 });
     if (error) toast.error(error.message);
     else load();
   };

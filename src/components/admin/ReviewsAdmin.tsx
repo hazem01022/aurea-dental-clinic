@@ -35,7 +35,7 @@ const ReviewsAdmin = () => {
   const add = async () => {
     const { error } = await supabase
       .from("reviews")
-      .insert({ quote: "", name: "", sort_order: rows.length });
+      .insert({ quote: "", name: "", sort_order: rows.reduce((m, r: any) => Math.max(m, r.sort_order ?? 0), -1) + 1 });
     if (error) toast.error(error.message);
     else load();
   };

@@ -46,7 +46,7 @@ const ServicesAdmin = () => {
     const { error } = await supabase.from("services").insert({
       title: "New Service",
       items: [],
-      sort_order: rows.length,
+      sort_order: rows.reduce((m, r: any) => Math.max(m, r.sort_order ?? 0), -1) + 1,
     });
     if (error) toast.error(error.message);
     else load();
