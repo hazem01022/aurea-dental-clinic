@@ -22,10 +22,21 @@ const Services = () => {
       .order("sort_order", { ascending: true })
       .then(({ data }) => {
         const rows = (data ?? []) as Service[];
-        if (rows.length === 0) setServices(fallback);
-        else if (rows.length < fallback.length)
-          setServices([...rows, ...fallback.slice(rows.length)]);
-        else setServices(rows);
+        const usedTitles = new Set(rows.map((r) => r.title.toLowerCase()));
+        const filler = fallback.filter((f) => !usedTitles.has(f.title.toLowerCase()));
+        let list: Service[] = rows.length === 0 ? [...fallback] : [...rows];
+        let i = 0;
+        // Always show at least the original count
+        while (list.length < fallback.length && i < filler.length) {
+          list.push({ ...filler[i], id: `pad-${filler[i].id}` });
+          i++;
+        }
+        // Keep grid clean: pad to a multiple of 3 (lg layout)
+        while (list.length % 3 !== 0 && i < filler.length) {
+          list.push({ ...filler[i], id: `pad-${filler[i].id}` });
+          i++;
+        }
+        setServices(list);
       });
   }, []);
 
