@@ -11,7 +11,7 @@ const fallback: Review[] = [
 ];
 
 const Testimonials = () => {
-  const [reviews, setReviews] = useState<Review[]>(fallback);
+  const [reviews, setReviews] = useState<Review[] | null>(null);
 
   useEffect(() => {
     supabase
@@ -19,22 +19,13 @@ const Testimonials = () => {
       .select("id,quote,name")
       .order("sort_order", { ascending: true })
       .then(({ data }) => {
-        const rows = (data ?? []) as Review[];
-        const usedNames = new Set(rows.map((r) => r.name.toLowerCase()));
-        const filler = fallback.filter((f) => !usedNames.has(f.name.toLowerCase()));
-        let list: Review[] = rows.length === 0 ? [...fallback] : [...rows];
-        let i = 0;
-        while (list.length < fallback.length && i < filler.length) {
-          list.push({ ...filler[i], id: `pad-${filler[i].id}` });
-          i++;
-        }
-        // Two-column grid: keep it even
-        if (list.length % 2 !== 0 && i < filler.length) {
-          list.push({ ...filler[i], id: `pad-${filler[i].id}` });
-        }
-        setReviews(list);
+        setReviews((data ?? []) as Review[]);
       });
   }, []);
+
+  const list: Review[] = reviews === null || reviews.length === 0 ? fallback : reviews;
+  const count = list.length;
+  const gridCols = count === 1 ? "grid-cols-1" : "md:grid-cols-2";
 
   return (
     <section id="reviews" className="py-24 md:py-36">
@@ -45,8 +36,8 @@ const Testimonials = () => {
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-px bg-border">
-          {reviews.map((r) => (
+        <div className={`grid ${gridCols} gap-px bg-border`}>
+          {list.map((r) => (
             <figure key={r.id} className="bg-background p-10 md:p-14">
               <span className="font-serif text-6xl text-gold leading-none">"</span>
               <blockquote className="font-serif text-2xl md:text-3xl leading-snug text-foreground/90 -mt-4">
