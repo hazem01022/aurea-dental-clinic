@@ -23,13 +23,18 @@ const BeforeAfter = () => {
       .select("id,image_url,alt")
       .order("sort_order", { ascending: true })
       .then(({ data }) => {
-        if (data) {
-          const mapped = data
-            .filter((d) => d.image_url)
-            .map((d) => ({ id: d.id, src: d.image_url, alt: d.alt || "Before and after" }));
-          setCases(mapped.length > 0 ? mapped : fallback);
-        } else {
+        const mapped = (data ?? [])
+          .filter((d) => d.image_url)
+          .map((d) => ({ id: d.id, src: d.image_url, alt: d.alt || "Before and after" }));
+        // Always keep at least the fallback cases visible so the layout never breaks
+        if (mapped.length === 0) {
           setCases(fallback);
+        } else if (mapped.length < fallback.length) {
+          // Pad with fallback items so the grid stays balanced
+          const needed = fallback.slice(mapped.length);
+          setCases([...mapped, ...needed]);
+        } else {
+          setCases(mapped);
         }
       });
   }, []);
