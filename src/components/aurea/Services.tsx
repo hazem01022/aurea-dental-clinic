@@ -13,7 +13,7 @@ const fallback: Service[] = [
 ];
 
 const Services = () => {
-  const [services, setServices] = useState<Service[]>(fallback);
+  const [services, setServices] = useState<Service[] | null>(null);
 
   useEffect(() => {
     supabase
@@ -21,24 +21,23 @@ const Services = () => {
       .select("id,title,items")
       .order("sort_order", { ascending: true })
       .then(({ data }) => {
-        const rows = (data ?? []) as Service[];
-        const usedTitles = new Set(rows.map((r) => r.title.toLowerCase()));
-        const filler = fallback.filter((f) => !usedTitles.has(f.title.toLowerCase()));
-        let list: Service[] = rows.length === 0 ? [...fallback] : [...rows];
-        let i = 0;
-        // Always show at least the original count
-        while (list.length < fallback.length && i < filler.length) {
-          list.push({ ...filler[i], id: `pad-${filler[i].id}` });
-          i++;
-        }
-        // Keep grid clean: pad to a multiple of 3 (lg layout)
-        while (list.length % 3 !== 0 && i < filler.length) {
-          list.push({ ...filler[i], id: `pad-${filler[i].id}` });
-          i++;
-        }
-        setServices(list);
+        setServices((data ?? []) as Service[]);
       });
   }, []);
+
+  // Show EXACTLY the dashboard contents. Only fall back when DB is empty.
+  const list: Service[] = services === null || services.length === 0 ? fallback : services;
+  const count = list.length;
+  const gridCols =
+    count === 1
+      ? "grid-cols-1"
+      : count === 2
+      ? "md:grid-cols-2"
+      : count % 3 === 0
+      ? "md:grid-cols-2 lg:grid-cols-3"
+      : count % 2 === 0
+      ? "md:grid-cols-2"
+      : "md:grid-cols-2 lg:grid-cols-3";
 
   return (
     <section id="services" className="py-24 md:py-36">
@@ -47,8 +46,8 @@ const Services = () => {
           Our <span className="italic text-gold">Services</span>
         </h2>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-border">
-          {services.map((s) => (
+        <div className={`grid ${gridCols} gap-px bg-border`}>
+          {list.map((s) => (
             <article
               key={s.id}
               className="group bg-background p-10 md:p-12 hover:bg-cream-deep transition-colors duration-500"
