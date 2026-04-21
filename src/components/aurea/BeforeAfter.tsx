@@ -15,7 +15,7 @@ const fallback: Item[] = [
 ];
 
 const BeforeAfter = () => {
-  const [cases, setCases] = useState<Item[]>(fallback);
+  const [cases, setCases] = useState<Item[] | null>(null);
 
   useEffect(() => {
     supabase
@@ -23,15 +23,18 @@ const BeforeAfter = () => {
       .select("id,image_url,alt")
       .order("sort_order", { ascending: true })
       .then(({ data }) => {
-        if (data && data.length > 0) {
-          setCases(
-            data
-              .filter((d) => d.image_url)
-              .map((d) => ({ id: d.id, src: d.image_url, alt: d.alt || "Before and after" }))
-          );
+        if (data) {
+          const mapped = data
+            .filter((d) => d.image_url)
+            .map((d) => ({ id: d.id, src: d.image_url, alt: d.alt || "Before and after" }));
+          setCases(mapped.length > 0 ? mapped : fallback);
+        } else {
+          setCases(fallback);
         }
       });
   }, []);
+
+  const list = cases ?? fallback;
 
   return (
     <section id="before-after" className="py-24 md:py-36">
@@ -41,7 +44,7 @@ const BeforeAfter = () => {
         </h2>
 
         <div className="grid sm:grid-cols-2 gap-6 md:gap-10">
-          {cases.map((c) => (
+          {list.map((c) => (
             <figure
               key={c.id}
               className="relative overflow-hidden bg-foreground/5 shadow-elegant group"
