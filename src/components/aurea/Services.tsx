@@ -21,7 +21,11 @@ const Services = () => {
       .select("id,title,items")
       .order("sort_order", { ascending: true })
       .then(({ data }) => {
-        if (data && data.length > 0) setServices(data as Service[]);
+        const rows = (data ?? []) as Service[];
+        if (rows.length === 0) setServices(fallback);
+        else if (rows.length < fallback.length)
+          setServices([...rows, ...fallback.slice(rows.length)]);
+        else setServices(rows);
       });
   }, []);
 
