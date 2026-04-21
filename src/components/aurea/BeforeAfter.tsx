@@ -30,24 +30,19 @@ const BeforeAfter = () => {
       });
   }, []);
 
-  // Build a layout that is ALWAYS full and balanced.
-  // Real DB photos come first; if there are fewer than the minimum or the
-  // count is odd, we pad with curated fallback shots so the grid never breaks.
-  const real = cases ?? [];
-  const MIN_ITEMS = fallback.length; // never show fewer than the original gallery
-  const usedSrcs = new Set(real.map((r) => r.src));
-  const filler = fallback.filter((f) => !usedSrcs.has(f.src));
+  // Show EXACTLY what the dashboard has. Only when the DB is completely empty
+  // do we fall back to the original gallery so the section is never blank.
+  const list: Item[] = cases === null || cases.length === 0 ? fallback : cases;
 
-  let list: Item[] = real.length === 0 ? fallback : [...real];
-  let i = 0;
-  while (list.length < MIN_ITEMS && i < filler.length) {
-    list.push({ ...filler[i], id: `pad-${filler[i].id}` });
-    i++;
-  }
-  // Keep the grid even (multiples of 2) for a clean two-column layout
-  if (list.length % 2 !== 0 && i < filler.length) {
-    list.push({ ...filler[i], id: `pad-${filler[i].id}` });
-  }
+  // Adapt grid columns to the count so the layout always feels intentional:
+  // 1 → single full-width, 2 → 2 cols, 3 → 3 cols, 4+ → 2 cols (rows of two).
+  const count = list.length;
+  const gridCols =
+    count === 1
+      ? "grid-cols-1"
+      : count === 3
+      ? "sm:grid-cols-2 lg:grid-cols-3"
+      : "sm:grid-cols-2";
 
   return (
     <section id="before-after" className="py-24 md:py-36">
@@ -56,11 +51,11 @@ const BeforeAfter = () => {
           Before <span className="italic text-gold">&</span> After
         </h2>
 
-        <div className="grid sm:grid-cols-2 gap-6 md:gap-10">
+        <div className={`grid ${gridCols} gap-6 md:gap-10`}>
           {list.map((c) => (
             <figure
               key={c.id}
-              className="relative overflow-hidden bg-foreground/5 shadow-elegant group"
+              className="relative overflow-hidden bg-foreground/5 shadow-elegant group aspect-[4/3]"
             >
               <img
                 src={c.src}
