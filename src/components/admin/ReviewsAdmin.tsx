@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { Plus, Save, Trash2 } from "lucide-react";
 
 type Review = { id: string; quote: string; name: string; sort_order: number };
 
@@ -19,22 +20,33 @@ const ReviewsAdmin = () => {
     else setRows(data as Review[]);
     setLoading(false);
   };
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   const save = async (r: Review) => {
-    const { error } = await supabase.from("reviews").update({
-      quote: r.quote, name: r.name, sort_order: r.sort_order,
-    }).eq("id", r.id);
-    if (error) toast.error(error.message); else toast.success("Saved");
+    const { error } = await supabase
+      .from("reviews")
+      .update({ quote: r.quote, name: r.name, sort_order: r.sort_order })
+      .eq("id", r.id);
+    if (error) toast.error(error.message);
+    else toast.success("Review saved");
   };
   const add = async () => {
-    const { error } = await supabase.from("reviews").insert({ quote: "", name: "", sort_order: rows.length });
-    if (error) toast.error(error.message); else load();
+    const { error } = await supabase
+      .from("reviews")
+      .insert({ quote: "", name: "", sort_order: rows.length });
+    if (error) toast.error(error.message);
+    else load();
   };
   const remove = async (id: string) => {
-    if (!confirm("Delete this review?")) return;
+    if (!confirm("Delete this review? The original layout will stay intact on the website.")) return;
     const { error } = await supabase.from("reviews").delete().eq("id", id);
-    if (error) toast.error(error.message); else load();
+    if (error) toast.error(error.message);
+    else {
+      toast.success("Review deleted");
+      load();
+    }
   };
 
   if (loading) return <p className="text-muted-foreground">Loading…</p>;
@@ -42,37 +54,86 @@ const ReviewsAdmin = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="font-serif text-3xl">Patient reviews</h2>
-        <Button onClick={add}>+ Add review</Button>
+        <p className="text-sm text-muted-foreground">
+          {rows.length} {rows.length === 1 ? "review" : "reviews"}
+        </p>
+        <Button onClick={add} className="gap-2">
+          <Plus className="w-4 h-4" /> Add review
+        </Button>
       </div>
-      {rows.map((r, i) => (
-        <div key={r.id} className="border border-border p-6 space-y-4 bg-background">
-          <div>
-            <Label>Quote</Label>
-            <Textarea rows={3} value={r.quote} onChange={(e) => {
-              const next = [...rows]; next[i] = { ...r, quote: e.target.value }; setRows(next);
-            }} />
-          </div>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <Label>Name</Label>
-              <Input value={r.name} onChange={(e) => {
-                const next = [...rows]; next[i] = { ...r, name: e.target.value }; setRows(next);
-              }} />
+
+      <div className="grid gap-5">
+        {rows.map((r, i) => (
+          <div
+            key={r.id}
+            className="bg-background border border-border shadow-soft p-7 md:p-8 space-y-5 transition-shadow hover:shadow-elegant"
+          >
+            <div className="flex items-center justify-between gap-4 pb-4 border-b border-border">
+              <div className="flex items-center gap-3">
+                <span className="font-serif text-3xl text-gold leading-none">"</span>
+                <span className="font-serif text-lg">{r.name || "Anonymous"}</span>
+              </div>
+              <span className="text-[10px] tracking-luxe uppercase text-muted-foreground">
+                #{i + 1}
+              </span>
             </div>
-            <div>
-              <Label>Sort order</Label>
-              <Input type="number" value={r.sort_order} onChange={(e) => {
-                const next = [...rows]; next[i] = { ...r, sort_order: Number(e.target.value) }; setRows(next);
-              }} />
+
+            <div className="space-y-2">
+              <Label className="text-[10px] tracking-luxe uppercase text-muted-foreground">Quote</Label>
+              <Textarea
+                rows={3}
+                value={r.quote}
+                onChange={(e) => {
+                  const next = [...rows];
+                  next[i] = { ...r, quote: e.target.value };
+                  setRows(next);
+                }}
+                className="font-serif text-lg leading-snug"
+              />
+            </div>
+
+            <div className="grid md:grid-cols-[1fr_120px] gap-4">
+              <div className="space-y-2">
+                <Label className="text-[10px] tracking-luxe uppercase text-muted-foreground">Name</Label>
+                <Input
+                  value={r.name}
+                  onChange={(e) => {
+                    const next = [...rows];
+                    next[i] = { ...r, name: e.target.value };
+                    setRows(next);
+                  }}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[10px] tracking-luxe uppercase text-muted-foreground">Order</Label>
+                <Input
+                  type="number"
+                  value={r.sort_order}
+                  onChange={(e) => {
+                    const next = [...rows];
+                    next[i] = { ...r, sort_order: Number(e.target.value) };
+                    setRows(next);
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center pt-4 border-t border-border">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => remove(r.id)}
+                className="text-muted-foreground hover:text-destructive gap-2"
+              >
+                <Trash2 className="w-4 h-4" /> Delete
+              </Button>
+              <Button onClick={() => save(r)} className="gap-2">
+                <Save className="w-4 h-4" /> Save
+              </Button>
             </div>
           </div>
-          <div className="flex gap-2">
-            <Button onClick={() => save(r)}>Save</Button>
-            <Button variant="outline" onClick={() => remove(r.id)}>Delete</Button>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
