@@ -19,7 +19,11 @@ const Testimonials = () => {
       .select("id,quote,name")
       .order("sort_order", { ascending: true })
       .then(({ data }) => {
-        if (data && data.length > 0) setReviews(data as Review[]);
+        const rows = (data ?? []) as Review[];
+        if (rows.length === 0) setReviews(fallback);
+        else if (rows.length < fallback.length)
+          setReviews([...rows, ...fallback.slice(rows.length)]);
+        else setReviews(rows);
       });
   }, []);
 
