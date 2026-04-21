@@ -26,13 +26,28 @@ const BeforeAfter = () => {
         const mapped = (data ?? [])
           .filter((d) => d.image_url)
           .map((d) => ({ id: d.id, src: d.image_url, alt: d.alt || "Before and after" }));
-        // Only show fallback when the database is completely empty.
-        // Once any photos exist in the CMS, show exactly those — no duplicates.
-        setCases(mapped.length === 0 ? fallback : mapped);
+        setCases(mapped);
       });
   }, []);
 
-  const list = cases ?? fallback;
+  // Build a layout that is ALWAYS full and balanced.
+  // Real DB photos come first; if there are fewer than the minimum or the
+  // count is odd, we pad with curated fallback shots so the grid never breaks.
+  const real = cases ?? [];
+  const MIN_ITEMS = fallback.length; // never show fewer than the original gallery
+  const usedSrcs = new Set(real.map((r) => r.src));
+  const filler = fallback.filter((f) => !usedSrcs.has(f.src));
+
+  let list: Item[] = real.length === 0 ? fallback : [...real];
+  let i = 0;
+  while (list.length < MIN_ITEMS && i < filler.length) {
+    list.push({ ...filler[i], id: `pad-${filler[i].id}` });
+    i++;
+  }
+  // Keep the grid even (multiples of 2) for a clean two-column layout
+  if (list.length % 2 !== 0 && i < filler.length) {
+    list.push({ ...filler[i], id: `pad-${filler[i].id}` });
+  }
 
   return (
     <section id="before-after" className="py-24 md:py-36">

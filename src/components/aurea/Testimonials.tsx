@@ -20,10 +20,19 @@ const Testimonials = () => {
       .order("sort_order", { ascending: true })
       .then(({ data }) => {
         const rows = (data ?? []) as Review[];
-        if (rows.length === 0) setReviews(fallback);
-        else if (rows.length < fallback.length)
-          setReviews([...rows, ...fallback.slice(rows.length)]);
-        else setReviews(rows);
+        const usedNames = new Set(rows.map((r) => r.name.toLowerCase()));
+        const filler = fallback.filter((f) => !usedNames.has(f.name.toLowerCase()));
+        let list: Review[] = rows.length === 0 ? [...fallback] : [...rows];
+        let i = 0;
+        while (list.length < fallback.length && i < filler.length) {
+          list.push({ ...filler[i], id: `pad-${filler[i].id}` });
+          i++;
+        }
+        // Two-column grid: keep it even
+        if (list.length % 2 !== 0 && i < filler.length) {
+          list.push({ ...filler[i], id: `pad-${filler[i].id}` });
+        }
+        setReviews(list);
       });
   }, []);
 
